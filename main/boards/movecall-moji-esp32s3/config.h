@@ -2,7 +2,7 @@
 #define _BOARD_CONFIG_H_
 
 // Movecall Moji configuration
-
+// 针脚定义、时钟、采样率等
 #include <driver/gpio.h>
 
 #define AUDIO_INPUT_SAMPLE_RATE  24000

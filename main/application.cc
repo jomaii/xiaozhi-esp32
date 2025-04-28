@@ -338,7 +338,7 @@ void Application::Start() {
     auto display = board.GetDisplay();
 
     /* Setup the audio codec */
-    auto codec = board.GetAudioCodec();
+    auto codec = board.GetAudioCodec();//声音编解码初始化
     opus_decoder_ = std::make_unique<OpusDecoderWrapper>(codec->output_sample_rate(), 1, OPUS_FRAME_DURATION_MS);
     opus_encoder_ = std::make_unique<OpusEncoderWrapper>(16000, 1, OPUS_FRAME_DURATION_MS);
     if (realtime_chat_enabled_) {
@@ -360,7 +360,7 @@ void Application::Start() {
 
     xTaskCreatePinnedToCore([](void* arg) {
         Application* app = (Application*)arg;
-        app->AudioLoop();
+        app->AudioLoop();   //循环处理声音数据
         vTaskDelete(NULL);
     }, "audio_loop", 4096 * 2, this, 8, &audio_loop_task_handle_, realtime_chat_enabled_ ? 1 : 0);
 
@@ -492,13 +492,15 @@ void Application::Start() {
     });
     protocol_->Start();
 
-#if CONFIG_USE_AUDIO_PROCESSOR
-    audio_processor_.Initialize(codec, realtime_chat_enabled_);
-    audio_processor_.OnOutput([this](std::vector<int16_t>&& data) {
-        background_task_->Schedule([this, data = std::move(data)]() mutable {
+#if CONFIG_USE_AUDIO_PROCESSOR  //声音的处理
+    audio_processor_.Initialize(codec, realtime_chat_enabled_); //声音处理层调用声音编解码层
+    //std::function代替函数指针实现回调函数 &&表示右值引用，表示 data 可以移动。
+    audio_processor_.OnOutput([this](std::vector<int16_t>&& data) {  
+        background_task_->Schedule([this, data = std::move(data)]() mutable {   //将 data 的所有权转移到 lambda 内部，避免拷贝。
             if (protocol_->IsAudioChannelBusy()) {
                 return;
             }
+            //麦克风数据data进行OPUS编码
             opus_encoder_->Encode(std::move(data), [this](std::vector<uint8_t>&& opus) {
                 Schedule([this, opus = std::move(opus)]() {
                     protocol_->SendAudio(opus);
@@ -704,7 +706,7 @@ void Application::OnAudioInput() {
         int samples = audio_processor_.GetFeedSize();
         if (samples > 0) {
             ReadAudio(data, 16000, samples);
-            audio_processor_.Feed(data);
+            audio_processor_.Feed(data);//由Feed函数写入麦克风数据
             return;
         }
     }

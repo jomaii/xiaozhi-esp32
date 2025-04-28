@@ -4,6 +4,7 @@
 
 static const char TAG[] = "Es8311AudioCodec";
 
+//构造函数
 Es8311AudioCodec::Es8311AudioCodec(void* i2c_master_handle, i2c_port_t i2c_port, int input_sample_rate, int output_sample_rate,
     gpio_num_t mclk, gpio_num_t bclk, gpio_num_t ws, gpio_num_t dout, gpio_num_t din,
     gpio_num_t pa_pin, uint8_t es8311_addr, bool use_mclk) {
@@ -13,6 +14,7 @@ Es8311AudioCodec::Es8311AudioCodec(void* i2c_master_handle, i2c_port_t i2c_port,
     input_sample_rate_ = input_sample_rate;
     output_sample_rate_ = output_sample_rate;
     pa_pin_ = pa_pin;
+    //在构造函数中进行I2S初始化,输入针脚
     CreateDuplexChannels(mclk, bclk, ws, dout, din);
 
     // Do initialize of related interface: data_if, ctrl_if and gpio_if
@@ -74,6 +76,7 @@ Es8311AudioCodec::~Es8311AudioCodec() {
     audio_codec_delete_data_if(data_if_);
 }
 
+//通过第三方库进行I2S初始化，生产句柄
 void Es8311AudioCodec::CreateDuplexChannels(gpio_num_t mclk, gpio_num_t bclk, gpio_num_t ws, gpio_num_t dout, gpio_num_t din) {
     assert(input_sample_rate_ == output_sample_rate_);
 

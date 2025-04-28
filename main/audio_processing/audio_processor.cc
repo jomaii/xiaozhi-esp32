@@ -71,6 +71,7 @@ size_t AudioProcessor::GetFeedSize() {
     return afe_iface_->get_feed_chunksize(afe_data_) * codec_->input_channels();
 }
 
+//麦克风数据由Feed函数写入,调用了第三方库的feed
 void AudioProcessor::Feed(const std::vector<int16_t>& data) {
     if (afe_data_ == nullptr) {
         return;
@@ -132,7 +133,7 @@ void AudioProcessor::AudioProcessorTask() {
             }
         }
 
-        if (output_callback_) {
+        if (output_callback_) {//声音数据data来源
             output_callback_(std::vector<int16_t>(res->data, res->data + res->data_size / sizeof(int16_t)));
         }
     }

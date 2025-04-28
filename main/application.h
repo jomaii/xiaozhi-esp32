@@ -49,7 +49,7 @@ enum DeviceState {
 
 class Application {
 public:
-    static Application& GetInstance() {
+    static Application& GetInstance() {     //声名引用
         static Application instance;
         return instance;
     }

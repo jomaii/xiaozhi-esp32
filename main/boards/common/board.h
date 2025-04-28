@@ -28,7 +28,7 @@ protected:
 
 public:
     static Board& GetInstance() {
-        static Board* instance = static_cast<Board*>(create_board());
+        static Board* instance = static_cast<Board*>(create_board());   //转换为指向Board的指针
         return *instance;
     }
 

@@ -8,7 +8,7 @@
 #include <esp_codec_dev.h>
 #include <esp_codec_dev_defaults.h>
 
-class Es8311AudioCodec : public AudioCodec {
+class Es8311AudioCodec : public AudioCodec {//底层的声音编解码类，发送到声音处理层
 private:
     const audio_codec_data_if_t* data_if_ = nullptr;
     const audio_codec_ctrl_if_t* ctrl_if_ = nullptr;
@@ -21,7 +21,7 @@ private:
 
     void CreateDuplexChannels(gpio_num_t mclk, gpio_num_t bclk, gpio_num_t ws, gpio_num_t dout, gpio_num_t din);
 
-    virtual int Read(int16_t* dest, int samples) override;
+    virtual int Read(int16_t* dest, int samples) override;//8311方案，重写基类AudioCodec的读写函数
     virtual int Write(const int16_t* data, int samples) override;
 
 public:

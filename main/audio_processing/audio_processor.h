@@ -12,7 +12,7 @@
 
 #include "audio_codec.h"
 
-class AudioProcessor {
+class AudioProcessor {  //声音处理类，获取声音编解码层后
 public:
     AudioProcessor();
     ~AudioProcessor();

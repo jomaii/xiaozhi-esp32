@@ -155,10 +155,10 @@ public:
         return &backlight;
     }
 
-    virtual AudioCodec* GetAudioCodec() override {
+    virtual AudioCodec* GetAudioCodec() override {  //声音芯片用的8311方案，处理麦克风输入与扬声器输出
         static Es8311AudioCodec audio_codec(codec_i2c_bus_, I2C_NUM_0, AUDIO_INPUT_SAMPLE_RATE, AUDIO_OUTPUT_SAMPLE_RATE,
             AUDIO_I2S_GPIO_MCLK, AUDIO_I2S_GPIO_BCLK, AUDIO_I2S_GPIO_WS, AUDIO_I2S_GPIO_DOUT, AUDIO_I2S_GPIO_DIN,
-            AUDIO_CODEC_PA_PIN, AUDIO_CODEC_ES8311_ADDR);
+            AUDIO_CODEC_PA_PIN, AUDIO_CODEC_ES8311_ADDR);//构造函数的参数
         return &audio_codec;
     }
 };

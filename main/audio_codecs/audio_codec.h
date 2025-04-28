@@ -14,7 +14,7 @@
 #define AUDIO_CODEC_DMA_DESC_NUM 6
 #define AUDIO_CODEC_DMA_FRAME_NUM 240
 
-class AudioCodec {
+class AudioCodec {//作为声音的基类写了一些共性的东西
 public:
     AudioCodec();
     virtual ~AudioCodec();
