@@ -260,6 +260,7 @@ public:
     }
 };
 
+//子类为各个物联网设备
 class Thing {
 public:
     Thing(const std::string& name, const std::string& description) :

@@ -52,7 +52,7 @@ bool ThingManager::GetStatesJson(std::string& json, bool delta) {
 
 void ThingManager::Invoke(const cJSON* command) {
     auto name = cJSON_GetObjectItem(command, "name");
-    for (auto& thing : things_) {
+    for (auto& thing : things_) {//循环判断调用的是哪个设备
         if (thing->name() == name->valuestring) {
             thing->Invoke(command);
             return;

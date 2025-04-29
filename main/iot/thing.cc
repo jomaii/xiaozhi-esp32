@@ -45,6 +45,7 @@ std::string Thing::GetStateJson() {
 }
 
 void Thing::Invoke(const cJSON* command) {
+    //解析命令获取方法与参数
     auto method_name = cJSON_GetObjectItem(command, "method");
     auto input_params = cJSON_GetObjectItem(command, "parameters");
 
@@ -64,7 +65,7 @@ void Thing::Invoke(const cJSON* command) {
             }
         }
 
-        Application::GetInstance().Schedule([&method]() {
+        Application::GetInstance().Schedule([&method]() {//(匿名回调)将调用的方法放到任务函数中
             method.Invoke();
         });
     } catch (const std::runtime_error& e) {

@@ -334,8 +334,8 @@ void Application::Start() {
     auto& board = Board::GetInstance();
     SetDeviceState(kDeviceStateStarting);
 
-    /* Setup the display */
-    auto display = board.GetDisplay();
+    /* Setup the display Moji采用了LCDdisplay*/
+    auto display = board.GetDisplay();//屏幕显示类，在板子的子类Moji中重写了board的GetDisplay方法,返回lcd的display
 
     /* Setup the audio codec */
     auto codec = board.GetAudioCodec();//声音编解码初始化
@@ -458,8 +458,8 @@ void Application::Start() {
                 });
             }
         } else if (strcmp(type->valuestring, "iot") == 0) {
-            auto commands = cJSON_GetObjectItem(root, "commands");
-            if (commands != NULL) {
+            auto commands = cJSON_GetObjectItem(root, "commands");  //解析物联网命令
+            if (commands != NULL) {//获取物联网管理类，循环获取命令
                 auto& thing_manager = iot::ThingManager::GetInstance();
                 for (int i = 0; i < cJSON_GetArraySize(commands); ++i) {
                     auto command = cJSON_GetArrayItem(commands, i);

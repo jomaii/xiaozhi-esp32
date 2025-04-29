@@ -105,6 +105,7 @@ private:
         ESP_ERROR_CHECK(esp_lcd_panel_mirror(panel_handle, true, false));
         ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(panel_handle, true)); 
 
+        //创建屏幕对象(SPI LCD)初始化lcd各项参数
         display_ = new SpiLcdDisplay(io_handle, panel_handle,
                                     DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_OFFSET_X, DISPLAY_OFFSET_Y, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y, DISPLAY_SWAP_XY,
                                     {
