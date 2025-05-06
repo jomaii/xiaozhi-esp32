@@ -18,10 +18,10 @@
       auto codec = board.GetAudioCodec();
 
   2 LCD屏幕的数据处理
-
+    spi 
     idf 库
 
-  3 网络通信
+  3 网络通信 连接服务器 mqtt协议
   4 物联网
  
   5 其他

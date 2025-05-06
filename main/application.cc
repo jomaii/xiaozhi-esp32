@@ -358,7 +358,7 @@ void Application::Start() {
     }
     codec->Start();
 
-    xTaskCreatePinnedToCore([](void* arg) {
+    xTaskCreatePinnedToCore([](void* arg) {     //指定核运行
         Application* app = (Application*)arg;
         app->AudioLoop();   //循环处理声音数据
         vTaskDelete(NULL);
@@ -370,7 +370,7 @@ void Application::Start() {
     // Check for new firmware version or get the MQTT broker address
     CheckNewVersion();
 
-    // Initialize the protocol
+    // Initialize the protocol 通信协议
     display->SetStatus(Lang::Strings::LOADING_PROTOCOL);
 #ifdef CONFIG_CONNECTION_TYPE_WEBSOCKET
     protocol_ = std::make_unique<WebsocketProtocol>();
@@ -381,6 +381,7 @@ void Application::Start() {
         SetDeviceState(kDeviceStateIdle);
         Alert(Lang::Strings::ERROR, message.c_str(), "sad", Lang::Sounds::P3_EXCLAMATION);
     });
+    //获取声音data（来自服务器？），通过声音队列发送
     protocol_->OnIncomingAudio([this](std::vector<uint8_t>&& data) {
         const int max_packets_in_queue = 300 / OPUS_FRAME_DURATION_MS;
         std::lock_guard<std::mutex> lock(mutex_);
@@ -601,7 +602,7 @@ void Application::Schedule(std::function<void()> callback) {
         std::lock_guard<std::mutex> lock(mutex_);
         main_tasks_.push_back(std::move(callback));
     }
-    xEventGroupSetBits(event_group_, SCHEDULE_EVENT);
+    xEventGroupSetBits(event_group_, SCHEDULE_EVENT);   //设置事件组，之前的各种任务都是用的Schedule回调函数
 }
 
 // The Main Event Loop controls the chat state and websocket connection
@@ -609,11 +610,11 @@ void Application::Schedule(std::function<void()> callback) {
 // they should use Schedule to call this function
 void Application::MainEventLoop() {
     while (true) {
-        auto bits = xEventGroupWaitBits(event_group_, SCHEDULE_EVENT, pdTRUE, pdFALSE, portMAX_DELAY);
+        auto bits = xEventGroupWaitBits(event_group_, SCHEDULE_EVENT, pdTRUE, pdFALSE, portMAX_DELAY);  //等待SCHEDULE_EVENT的发生。
 
         if (bits & SCHEDULE_EVENT) {
             std::unique_lock<std::mutex> lock(mutex_);
-            std::list<std::function<void()>> tasks = std::move(main_tasks_);
+            std::list<std::function<void()>> tasks = std::move(main_tasks_);    //通过std::move()，可以避免不必要的拷贝操作,赋值后销毁内容
             lock.unlock();
             for (auto& task : tasks) {
                 task();
@@ -643,7 +644,7 @@ void Application::OnAudioOutput() {
     const int max_silence_seconds = 10;
 
     std::unique_lock<std::mutex> lock(mutex_);
-    if (audio_decode_queue_.empty()) {
+    if (audio_decode_queue_.empty()) {//声音队列（来自服务器的声音数据）
         // Disable the output if there is no audio data for a long time
         if (device_state_ == kDeviceStateIdle) {
             auto duration = std::chrono::duration_cast<std::chrono::seconds>(now - last_output_time_).count();
@@ -688,9 +689,9 @@ void Application::OnAudioOutput() {
     });
 }
 
-void Application::OnAudioInput() {
+void Application::OnAudioInput() {//声音输入
 #if CONFIG_USE_WAKE_WORD_DETECT
-    if (wake_word_detect_.IsDetectionRunning()) {
+    if (wake_word_detect_.IsDetectionRunning()) {//唤醒词检测
         std::vector<int16_t> data;
         int samples = wake_word_detect_.GetFeedSize();
         if (samples > 0) {
@@ -701,7 +702,7 @@ void Application::OnAudioInput() {
     }
 #endif
 #if CONFIG_USE_AUDIO_PROCESSOR
-    if (audio_processor_.IsRunning()) {
+    if (audio_processor_.IsRunning()) {//命令词检测
         std::vector<int16_t> data;
         int samples = audio_processor_.GetFeedSize();
         if (samples > 0) {

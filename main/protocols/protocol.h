@@ -37,13 +37,13 @@ public:
     inline const std::string& session_id() const {
         return session_id_;
     }
-
+    //获得数据(声音,json文件等等)
     void OnIncomingAudio(std::function<void(std::vector<uint8_t>&& data)> callback);
     void OnIncomingJson(std::function<void(const cJSON* root)> callback);
     void OnAudioChannelOpened(std::function<void()> callback);
     void OnAudioChannelClosed(std::function<void()> callback);
     void OnNetworkError(std::function<void(const std::string& message)> callback);
-
+    //发送数据函数，由子类重写实现
     virtual void Start() = 0;
     virtual bool OpenAudioChannel() = 0;
     virtual void CloseAudioChannel() = 0;
