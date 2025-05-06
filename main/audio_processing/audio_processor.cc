@@ -104,7 +104,7 @@ void AudioProcessor::OnVadStateChange(std::function<void(bool speaking)> callbac
 
 void AudioProcessor::AudioProcessorTask() {
     auto fetch_size = afe_iface_->get_fetch_chunksize(afe_data_);//获取每帧数据大小
-    auto feed_size = afe_iface_->get_feed_chunksize(afe_data_);
+    auto feed_size = afe_iface_->get_feed_chunksize(afe_data_);//获取每帧数据大小
     ESP_LOGI(TAG, "Audio communication task started, feed size: %d fetch size: %d",
         feed_size, fetch_size);
 
