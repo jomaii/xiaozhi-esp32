@@ -21,10 +21,10 @@ void AudioProcessor::Initialize(AudioCodec* codec, bool realtime_chat) {
     for (int i = 0; i < ref_num; i++) {
         input_format.push_back('R');
     }
-
+    //sr模型初始化
     srmodel_list_t *models = esp_srmodel_init("model");
     char* ns_model_name = esp_srmodel_filter(models, ESP_NSNET_PREFIX, NULL);
-
+    //组件AFE初始化
     afe_config_t* afe_config = afe_config_init(input_format.c_str(), NULL, AFE_TYPE_VC, AFE_MODE_HIGH_PERF);
     if (realtime_chat) {
         afe_config->aec_init = true;
@@ -103,7 +103,7 @@ void AudioProcessor::OnVadStateChange(std::function<void(bool speaking)> callbac
 }
 
 void AudioProcessor::AudioProcessorTask() {
-    auto fetch_size = afe_iface_->get_fetch_chunksize(afe_data_);
+    auto fetch_size = afe_iface_->get_fetch_chunksize(afe_data_);//获取每帧数据大小
     auto feed_size = afe_iface_->get_feed_chunksize(afe_data_);
     ESP_LOGI(TAG, "Audio communication task started, feed size: %d fetch size: %d",
         feed_size, fetch_size);
