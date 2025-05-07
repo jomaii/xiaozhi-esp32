@@ -1,0 +1,9 @@
+{
+    "target": "esp32s3",
+    "builds": [
+        {
+            "name": "movecall-home-assist-esp32s3",
+            "sdkconfig_append": []
+        }
+    ]
+}

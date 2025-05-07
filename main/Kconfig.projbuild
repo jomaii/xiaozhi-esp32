@@ -134,6 +134,8 @@ choice BOARD_TYPE
         bool "LILYGO T-CameraPlus-S3"
     config BOARD_TYPE_MOVECALL_MOJI_ESP32S3
          bool "Movecall Moji 小智AI衍生版"
+    config BOARD_TYPE_MOVECALL_HOME_ASSIST_ESP32S3
+         bool "Movecall Moji 衍生mqtt中控"
     config BOARD_TYPE_MOVECALL_CUICAN_ESP32S3
          bool "Movecall CuiCan 璀璨·AI吊坠"
     config BOARD_TYPE_ATK_DNESP32S3
