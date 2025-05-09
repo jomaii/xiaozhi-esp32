@@ -38,10 +38,10 @@ public:
                     bool swap_xy) 
         : SpiLcdDisplay(io_handle, panel_handle, width, height, offset_x, offset_y, mirror_x, mirror_y, swap_xy,
                     {
-                        .text_font = &font_puhui_20_4,
+                        .text_font = &font_puhui_20_4,  //fonts结构体三个
                         .icon_font = &font_awesome_20_4,
                         .emoji_font = font_emoji_64_init(),
-                    }) {
+                    }) {//构造函数
 
         DisplayLockGuard lock(this);
         // 由于屏幕是圆的，所以状态栏需要增加左右内边距
@@ -166,4 +166,4 @@ public:
     }
 };
 
-DECLARE_BOARD(MovecallHomeAssistESP32S3);
+DECLARE_BOARD(MovecallHomeAssistESP32S3);//宏定义函数create_board，返回板子对象，在GetInstance获取实例时调用
